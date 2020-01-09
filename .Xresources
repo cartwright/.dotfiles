@@ -1,7 +1,8 @@
 ! miscellany from an old hat -------------------------------------------------
 
-XTerm*.LoginShell: True
-term*saveLines: 2000
+XTerm*.LoginShell: true
+Xterm*saveLines: 2000
+! XTerm.vt100.reverseVideo: true
 
 
 ! terminal colors ------------------------------------------------------------
@@ -58,4 +59,4 @@ xterm*scrollBar:          true
 xterm*rightScrollBar:     true
 xterm*jumpScroll:         true
 xterm*multiScroll:        true
-xterm*toolBar:            false
+xterm*toolBar: 		  true

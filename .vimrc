@@ -1,56 +1,88 @@
-" not all of this is understood. vim ide by sontek...
-" http://sontek.net/blog/detail/turning-vim-into-a-modern-python-ide
-"filetype off
-"call pathogen#incubate()
-"call pathogen#helptags()
-"set foldmethod=indent
-"set foldlevel=99
-"map <leader>td <Plug>TaskList
-"map <leader>g :GundoToggle<CR>
-"let g:pyflakes_use_quickfix = 0
-"let g:pep8_map='<leader>8'
-"au FileType python set omnifunc=pythoncomplete#Complete
-"let g:SuperTabDefaultCompletionType = "context"
-"set completeopt=menuone,longest,preview
-"map <leader>n :NERDTreeToggle<CR>
-"map <leader>j :RopeGotoDefinition<CR>
-"map <leader>r :RopeRename<CR>
-"nmap <leader>a <ESC>:Ack!
-"set statusline=%{fugitive#statusline()}
-"nmap <silent><Leader>tf <Esc>:Pytest file<CR>
-"nmap <silent><Leader>tc <Esc>:Pytest class<CR>
-"nmap <silent><Leader>tm <Esc>:Pytest method<CR>
-"nmap <silent><Leader>tn <Esc>:Pytest next<CR>
-"nmap <silent><Leader>tp <Esc>:Pytest previous<CR>
-"nmap <silent><Leader>te <Esc>:Pytest error<CR>
+" BEGIN NEW (07-JAN-2020) STYLE
+set nocompatible
+filetype off
 
-" https://gist.github.com/MicahElliott/3048622
-" Add the virtualenv's site packages to vim path
-"py << EOF
-"import os.path
-"import sys
-"import vim
-"if 'VIRTUAL_ENV' in os.environ:
-"	project_base_dir = os.environ['VIRTUAL_ENV']
-"	sys.path.insert(0, project_base_dir)
-"	activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-"	execfile(activate_this, dict(__file__=activate_this))
-"EOF
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-" hack for tasklist bundle conflict
-"nnoremap <leader>v <Plug>TaskList
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" add all your plugins here
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'jnurmine/Zenburn'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
+
+" all of your plugins must be added before the following line
+call vundle#end()
+filetype plugin indent on
 
 " homebrew
-set nocompatible
+let python_highlight_all=1
 syntax on
-filetype on
-filetype plugin indent on
 set scrolloff=5
-colorscheme oceanblack
+
+if &term =~ "term"
+    set t_Co=256
+endif
 
 " set line numbers on
 set nu
 
-if &term =~ "term"
-  set t_Co=256
-endif
+" split window control
+set splitbelow
+set splitright
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" enable folding
+set foldmethod=indent
+set foldlevel=99
+
+" enable folding with the spacebar
+nnoremap <space> za
+
+" see docstrings for folded code
+let g:SimplyFold_docstring_preview=1
+
+" proper PEP 8 indentation
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+
+" full stack development spacing
+au BufNewFile,BufRead *.js,*.html,*.css
+    \ set tabstop=2 softtabstop=2 shiftwidth=2
+
+" flag unnecessary whitespace
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+" UTF-8 support
+set encoding=utf-8
+
+" YouCompleteMe custimizations
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" python with virtualenv support
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+	project_base_dir = os.environ['VIRTUAL_ENV']
+	activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+	execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+" hide .pyc files in nerdtree
+let NERDTreeIgnore=['\.pyc$', '\-$']

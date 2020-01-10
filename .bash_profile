@@ -18,6 +18,7 @@ fi
 
 # source scripts directory
 export PATH="$PATH:$HOME/scripts"
+export PATH="$PATH:$HOME/nest"
 
 # kill the beep
 xset b off
